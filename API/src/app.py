@@ -1,9 +1,11 @@
 from flask import Flask, jsonify, request
 from config import config
 from flask_mysqldb import MySQL
-
+from flask_cors import CORS
 
 app= Flask(__name__)
+
+cors = CORS(app)
 
 conexion = MySQL(app)
 
@@ -43,7 +45,7 @@ def registrar_curso():
         #print(request.json)
         cursor= conexion.connection.cursor()
         sql = """INSERT INTO employees (id, Nombre, Edad, Telefono)
-        VALUES ('{0}','{1}','{2}',{3})""".format(request.json['codigo'],
+        VALUES ('{0}','{1}','{2}',{3})""".format(request.json['Codigo'],
         request.json['Nombre'],request.json['Edad'],request.json['Telefono'])
         cursor.execute(sql)
         conexion.connection.commit() #confirma la accion de insercion
@@ -75,6 +77,7 @@ def actualizar_curso(codigo):
         conexion.connection.commit() #confirma la accion de insercion
         return jsonify({'mensaje': "Curso Actualizado"})
     except Exception as ex:
+        print(ex)
         return jsonify({'mensaje':"error"})
 
 def pagina_no_encontrada(error):
